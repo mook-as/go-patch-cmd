@@ -20,7 +20,14 @@ func render(args []string, output io.Writer) error {
 		return xerrors.New("no YAML file given")
 	}
 
-	docBytes, err := ioutil.ReadFile(args[0])
+	var docBytes []byte
+	var err error
+
+	if args[0] == "-" {
+		docBytes, err = ioutil.ReadAll(os.Stdin)
+	} else {
+		docBytes, err = ioutil.ReadFile(args[0])
+	}
 	if err != nil {
 		return xerrors.Errorf("could not read YAML document %s: %w", args[0], err)
 	}
